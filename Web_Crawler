@@ -1,0 +1,23 @@
+import requests
+from bs4 import BeautifulSoup
+
+url = "https://webscraper.io/test-sites/e-commerce/allinone"
+
+response = requests.get(url)
+
+if response.status_code == 200:
+    soup = BeautifulSoup(response.text, 'html.parser')
+
+    product_divs = soup.find_all('div', class_='col-md-4 col-xl-4 col-lg-4')    #list
+
+    for product_div in product_divs:
+        product_name = product_div.find('a', class_='title').text.strip()
+        product_price = product_div.find('h4', class_='float-end price card-title pull-right').text.strip()
+        product_link = product_div.find('a', class_='title')['href']
+
+        print("Product Name:", product_name)
+        print("Product Price:", product_price)
+        print("Product Link:", product_link)
+        print()
+else:
+    print("Failed to retrieve the page. Status code:", response.status_code)
